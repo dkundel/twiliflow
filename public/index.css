@@ -1,90 +1,217 @@
-* {
-  box-sizing:border-box;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue';
+  font-weight: 200;
 }
 
-html, body {
-  padding:0;
-  margin:0;
-  height:100%;
-  width:100%;
-  color:#dedede;
-  background-color: #849091;
-  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#main {
+  position: relative;
+  flex: 1;
+  background: #efefef;
+  display: flex;
+}
+
+#filteredConversation {
+  position: absolute;
+  background: white;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#filteredConversation.ng-enter, #filteredConversation.ng-leave {
+  transition: all ease-in 0.4s;
+}
+
+#filteredConversation.ng-enter, #filteredConversation.ng-leave.ng-leave-active {
+  left: 100%;
+}
+
+#filteredConversation.ng-leave, #filteredConversation.ng-enter.ng-enter-active {
+  left: 0;
+}
+
+.light {
+  font-weight: 100;
 }
 
 header {
-  width:100%;
-  position:absolute;
-  text-align:center;
-  bottom:20px;
+  background: #C0392B;
+  color: #ECECEC;
 }
 
-header a, header a:visited {
-  font-size:18px;
-  color:#dedede;
-  text-decoration:none;
+#loggedIn {
+  display: flex;
 }
 
-header a:hover {
-  text-decoration:underline;
+#loggedIn p {
+  margin: 0;
+  margin: 12px 15px 13px 15px;
 }
 
-section {
-  height:70%;
-  background-color:#2B2B2A;
+#signIn {
+  display: flex;
 }
 
-section input {
-  display:block;
-  height:52px;
-  width:800px;
-  margin:10px auto;
-  outline:none;
-  background-color:transparent;
-  border:none;
-  border-bottom:1px solid #2B2B2A;
-  padding:0;
-  font-size:42px;
-  color:#eee;
+#signIn input {
+  margin: 10px 15px;
+  border: none;
+  outline: none;
+  padding: 5px;
 }
 
-#messages {
-  background-color:#232323;
-  padding:10px;
-  height:100%;
-  width:800px;
-  margin:0 auto;
-  overflow-y:auto;
+header button {
+  outline: none;
+  background: none;
+  border: none;
+  color: #ececec;
+  cursor: pointer;
 }
 
-#messages p {
-  margin:5px 0;
-  padding:0;
+header button:hover {
+  background: #A72012;
 }
 
-.info {
-  margin:5px 0;
-  font-style:italic;
+#loggedIn button {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 15px;
 }
 
-.message-container {
-  margin:5px 0;
-  color:#fff;
+#channelName {
+  flex: 1;
+  font-weight: 100;
 }
 
-.message-container .username {
-  display:inline-block;
-  margin-right:5px;
-  font-weight:bold;
-  color:#849091;
+footer {
+  background: #6C7A89;
 }
 
-.me, .username.me {
-  font-weight:bold;
-  color:cyan;
+
+#messages, #filteredMessages {
+  flex: 1;
+  overflow: scroll;
+  position: relative;
+  font-size: 14px;
 }
 
-.message-container .username.me {
-  display:inline-block;
-  margin-right:5px;
+.message {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+
+.message:last-of-type {
+  border-bottom: none;
+}
+
+.message.bordered {
+  border-left: 4px solid;
+}
+
+.message-content {
+  padding: 10px;
+  flex: 1;
+}
+
+.message-content img {
+  max-width: 100%;
+}
+
+.message-content .img-placeholder {
+  display: none;
+}
+
+.message-content.no-images img {
+  display: none;
+}
+
+.message-content.no-images .img-placeholder {
+  display: initial;
+}
+
+.message-thread {
+  margin: 10px;
+  cursor: pointer;
+}
+
+.message-author {
+  padding: 10px;
+}
+
+.message-collapse {
+  padding: 10px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+#loading h2 {
+  font-weight: 100;
+}
+
+#loading {
+  height: 100%;
+  width: 100%;
+  align-self: center;
+  text-align: center;
+  color: #888;
+}
+
+footer {
+  display: flex;
+}
+
+footer input {
+  flex: 1;
+  margin: 10px;
+  padding: 5px;
+  border: 0;
+  outline: 0;
+}
+
+footer button {
+  background: none;
+  outline: none;
+  border: none;
+  color: #ECECEC;
+  padding: 5px 20px;
+  cursor: pointer;
+}
+
+footer button:hover {
+  background: #536170;
+}
+
+.filtered-header {
+  background: #efefef;
+  box-shadow: 0px 1px 3px #aaa;
+  display: flex;
+  z-index: 9999;
+}
+
+.filtered-header button {
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 25px;
+  padding: 0px 15px 3px 15px;
+  cursor: pointer;
+  color: #888;
+}
+
+.filtered-header button:hover {
+  color: #444;
+}
+
+.filtered-header span {
+  padding: 10px 0px;
 }

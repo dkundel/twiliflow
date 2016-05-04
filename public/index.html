@@ -1,27 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Twilio IP Messaging Quickstart</title>
-    <link rel="shortcut icon" href="//www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
-  <header>
-    <a href="https://www.twilio.com/docs/api/ip-messaging/guides/quickstart-js" 
-      target="_blank">Read the getting started guide
-        <i class="fa fa-fw fa-external-link"></i>
-      </a>
-  </header>
-
-  <section>
-    <div id="messages"></div>
-    <input id="chat-input" type="text" placeholder="say anything" autofocus/>
-  </section>
-
+  <title>Twiliflow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <link rel="shortcut icon" href="//www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="index.css">
+  <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
   <script src="//media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
   <script src="//media.twiliocdn.com/sdk/rtc/js/ip-messaging/v0.9/twilio-ip-messaging.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="index.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-sanitize.min.js"></script>
+</head>
+<body ng-app="app" class="ng-cloak" ng-controller="ChatController as vm">
+  <header>
+    <div id="signIn" ng-if="!vm.connected">
+      <input ng-model="vm.identity" type="text">
+      <button ng-click="vm.signIn()">JOIN</button>
+    </div>
+    <div id="loggedIn" ng-if="vm.connected">
+      <p id="channelName">{{vm.channelName}}</p>
+      <p id="userInfo" class="light"><span class="fa fa-rebel"></span> Hi, {{vm.identity}}</p>
+      <button ng-click="vm.signOut()"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i></button>
+    </div>
+  </header>
+  
+  <div role="main" id="main">
+    <div id="loading" ng-if="vm.loading">
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+      <h2>Loading...</h2>
+    </div>
+    <div id="messages" ng-if="vm.connected">
+      <div class="message bordered" ng-repeat="msg in vm.messages" ng-style="{'border-left-color': vm.colorMap[msg.threadId]}">
+        <div class="message-thread" ng-click="vm.loadFiltered(msg.threadId)" ng-style="{color: vm.colorMap[msg.threadId]}"><span class="fa fa-comments fa-lg"></span></div>
+        <div class="message-author"><span>{{msg.author}}</span></div>
+        <div class="message-content" ng-class="{'no-images': vm.hiddenImages[msg.sid]}" ng-bind-html="msg.content"></div>
+        <div class="message-collapse" ng-click="vm.toggleImages(msg.sid)">
+          <span class="fa-stack fa-lg" ng-show="msg.content.indexOf('<img') !== -1">
+            <i class="fa fa-image fa-stack-1x"></i>
+            <i class="fa fa-ban fa-stack-2x" ng-hide="vm.hiddenImages[msg.sid]"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div id="filteredConversation" ng-if="vm.activeThread">
+        <div class="filtered-header">
+          <button ng-click="vm.closeFiltered()">×</button>
+          <span>{{vm.filtered[0].content}}</span>
+        </div>
+        <div id="filteredMessages">
+          <div class="message" ng-repeat="msg in vm.filtered">
+            <div class="message-author"><span>{{msg.author}}</span></div>
+            <div class="message-content" ng-class="{'no-images': vm.hiddenImages[msg.sid]}" ng-bind-html="msg.content"></div>
+            <div class="message-collapse" ng-click="vm.toggleImages(msg.sid)">
+              <span class="fa-stack fa-lg" ng-show="msg.content.indexOf('<img') !== -1">
+                <i class="fa fa-image fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x" ng-hide="vm.hiddenImages[msg.sid]"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  
+  <footer ng-if="vm.connected">
+    <input id="messageInput" ng-model="vm.currentMessage" type="text" ng-keydown="vm.keydown($event)">
+    <button ng-click="vm.sendMessage()">SEND</button>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>

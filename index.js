@@ -15,10 +15,16 @@ var AccessToken = require('twilio').AccessToken;
 var IpMessagingGrant = AccessToken.IpMessagingGrant;
 var express = require('express');
 var randomUsername = require('./randos');
+var bodyParser = require('body-parser');
 
 // Create Express webapp
 var app = express();
 app.use(express.static(path.join(__dirname, 'public')));
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 /*
 Generate an Access Token for a chat application user - it generates a random
@@ -26,8 +32,8 @@ username for the client requesting a token, and takes a device ID as a query
 parameter.
 */
 app.get('/token', function(request, response) {
-    var appName = 'TwilioChatDemo';
-    var identity = randomUsername();
+    var appName = 'TwiliFlow';
+    var identity = request.query.identity || randomUsername();
     var deviceId = request.query.device;
 
     // Create a unique ID for the client on their current device
@@ -56,6 +62,8 @@ app.get('/token', function(request, response) {
         token: token.toJwt()
     });
 });
+
+app.post('/bots', require('./lib/bots'))
 
 // Create http server and run it
 var server = http.createServer(app);
